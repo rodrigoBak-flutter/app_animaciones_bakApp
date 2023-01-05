@@ -35,6 +35,14 @@ class _CuadradoAnimadoState extends State<CuadradoAnimado>
 
   //Ayuda a controlar
   late Animation<double> rotation;
+  //Opacidad
+  late Animation<double> opacidad;
+
+  //Mover animacion
+  late Animation<double> mover;
+
+  //Agrandar animacion
+  late Animation<double> agrandar;
 
   @override
   void initState() {
@@ -42,17 +50,52 @@ class _CuadradoAnimadoState extends State<CuadradoAnimado>
     controller = AnimationController(
       vsync: this,
       //milliseconds 1000 = 1 segundo
-      duration: Duration(milliseconds: 4000),
+      duration: const Duration(milliseconds: 4000),
     );
 
     //Especificar tipo de animacion
-    rotation = Tween(begin: 0.0, end: 2 * Math.pi).animate(controller);
+    // rotation = Tween(begin: 0.0, end: 2 * Math.pi).animate(controller);
+    rotation = Tween(begin: 0.0, end: 2 * Math.pi).animate(
+      CurvedAnimation(parent: controller, curve: Curves.bounceOut),
+    );
+
+    //Especifica la transparencia de la animacion 1=visible y 0=invisible
+    // opacidad = Tween(begin: 0.1, end: 1.0).animate(controller);
+
+    //Interval(0, 1)= cuanto dura la animacion 0=inicio y 1=completado
+    opacidad = Tween(begin: 0.1, end: 1.0).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0, 0.25, curve: Curves.easeOut),
+      ),
+    );
+
+    //Desplazar hacia los lados
+    mover = Tween(begin: 0.0, end: 100.0).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    //Agrandar la animacion, cambiar el tamaño de mi animacion
+    agrandar = Tween(begin: 0.0, end: 2.0).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeOut,
+      ),
+    );
 
     controller.addListener(() {
       //Saber el Status de mi Animacion
-      print('Scatus: ${controller.status}');
+      // print('Scatus: ${controller.status}');
 
       //Condicion para que se retroceda
+      if (controller.status == AnimationStatus.completed) {
+        // controller.reset();
+        // controller.repeat();
+        controller.reverse();
+      }
 
       /*
       if (controller.status == AnimationStatus.completed) {
@@ -85,13 +128,29 @@ class _CuadradoAnimadoState extends State<CuadradoAnimado>
       children: [
         AnimatedBuilder(
           animation: controller,
+          child: RectanguloScreen(),
           builder: (BuildContext context, Widget? child) {
-            print(
-              'Rotacion: ' + rotation.value.toString(),
-            );
-            return Transform.rotate(
-              angle: rotation.value,
-              child: RectanguloScreen(),
+            //Saber el Status de mi Animacion
+            // print('Rotacion: ' + rotation.value.toString());
+            // print('Opacidad: ${opacidad.value}');
+            //print('Rotacion: ${rotation.value}');
+            //Propiedad translate = desplazamiento
+            return Transform.translate(
+              //Offset = (x,y), igual que el eje carteciano
+              offset: Offset(mover.value, 0.0),
+              //Propiedad rotate = girar
+              child: Transform.rotate(
+                angle: rotation.value,
+                //Propiedad opacity = mas visible o menos visible
+                child: Opacity(
+                  opacity: opacidad.value,
+                  //Propiedad scale = determina el tamaño de mi animacion
+                  child: Transform.scale(
+                    scale: agrandar.value,
+                    child: child,
+                  ),
+                ),
+              ),
             );
           },
         ),
@@ -104,7 +163,7 @@ class _CuadradoAnimadoState extends State<CuadradoAnimado>
             controller.forward();
 
             //Bucle, se repite una y otra vez
-           // controller.repeat();
+            // controller.repeat();
           },
           child: const Text('Activar animacion'),
         ),
