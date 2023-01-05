@@ -1,5 +1,8 @@
-import 'package:app_animaciones_bakapp/src/screens/home_screen.dart';
+
+
 import 'package:flutter/material.dart';
+
+import 'package:app_animaciones_bakapp/src/screens/reto_1_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Animaciones Personalizadas',
-      home: HomeScreen(),
+      home: RetoCuadradoScreen(),
     );
   }
 }
