@@ -1,5 +1,7 @@
 
 
+import 'package:app_animaciones_bakapp/src/screens/circular_progress_screen.dart';
+import 'package:app_animaciones_bakapp/src/screens/reto_doble_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_animaciones_bakapp/src/screens/reto_1_screen.dart';
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Animaciones Personalizadas',
-      home: RetoCuadradoScreen(),
+      home: CircularProgressScreen(),
     );
   }
 }
